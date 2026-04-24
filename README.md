@@ -36,3 +36,25 @@ Runs tests in console, in browser or with coverage.
 ### `lint`, `prettier`
 
 Runs linting and formatting for all files in `src` folder.
+
+## Deployment
+
+The UI is deployed with AWS CDK using [deployment/deploy-ui.ts](deployment/deploy-ui.ts).
+
+Deployment stack provisions:
+
+- S3 bucket for static website assets
+- CloudFront distribution in front of the bucket
+- Automatic upload of `dist` files to S3
+- CloudFront cache invalidation after each deployment
+
+Steps to deploy:
+
+- Login to AWS sso specifying profile name
+- Export profile name as env variable in terminal `export AWS_PROFILE=${name}`
+- `npm run deploy:ui:cdk:bootstrap` 
+
+## Live App
+
+Distributed: https://d1wlashj6d8hir.cloudfront.net/
+Direct S3(no Public access): https://s3-aws-shop-epam.s3.eu-north-1.amazonaws.com/index.html
