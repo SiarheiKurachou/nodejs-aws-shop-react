@@ -4,18 +4,22 @@ import MainLayout from "~/components/MainLayout/MainLayout";
 import { Typography } from "@mui/material";
 
 const PageProductForm = React.lazy(
-  () => import("~/components/pages/PageProductForm/PageProductForm")
+  () => import("~/components/pages/PageProductForm/PageProductForm"),
 );
 const PageOrders = React.lazy(
-  () => import("~/components/pages/PageOrders/PageOrders")
+  () => import("~/components/pages/PageOrders/PageOrders"),
 );
-const PageOrder = React.lazy(() => import("~/components/pages/PageOrder/PageOrder"));
+const PageOrder = React.lazy(
+  () => import("~/components/pages/PageOrder/PageOrder"),
+);
 const PageProductImport = React.lazy(
-  () => import("~/components/pages/admin/PageProductImport/PageProductImport")
+  () => import("~/components/pages/admin/PageProductImport/PageProductImport"),
 );
-const PageCart = React.lazy(() => import("~/components/pages/PageCart/PageCart"));
+const PageCart = React.lazy(
+  () => import("~/components/pages/PageCart/PageCart"),
+);
 const PageProducts = React.lazy(
-  () => import("~/components/pages/PageProducts/PageProducts")
+  () => import("~/components/pages/PageProducts/PageProducts"),
 );
 
 function App() {

@@ -19,13 +19,17 @@ export function useInvalidateOrders() {
   const queryClient = useQueryClient();
   return React.useCallback(
     () => queryClient.invalidateQueries({ queryKey: ["orders"], exact: true }),
-    []
+    [],
   );
 }
 
 export function useUpdateOrderStatus() {
   return useMutation({
-    mutationFn: (values: { id: string; status: OrderStatus; comment: string }) => {
+    mutationFn: (values: {
+      id: string;
+      status: OrderStatus;
+      comment: string;
+    }) => {
       const { id, ...data } = values;
       return axios.put(`${API_PATHS.order}/order/${id}/status`, data, {
         headers: {
@@ -52,8 +56,11 @@ export function useInvalidateOrder() {
   const queryClient = useQueryClient();
   return React.useCallback(
     (id: string) =>
-      queryClient.invalidateQueries({ queryKey: ["order", { id }], exact: true }),
-    []
+      queryClient.invalidateQueries({
+        queryKey: ["order", { id }],
+        exact: true,
+      }),
+    [],
   );
 }
 

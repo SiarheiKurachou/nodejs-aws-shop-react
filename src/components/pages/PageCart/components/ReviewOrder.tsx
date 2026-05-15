@@ -26,7 +26,11 @@ export default function ReviewOrder({ address, items }: ReviewOrderProps) {
           </Typography>
           <Typography gutterBottom>{address.address}</Typography>
         </Grid>
-        <Grid container size={{ xs: 12, sm: 6 }} sx={{ flexDirection: "column" }}>
+        <Grid
+          container
+          size={{ xs: 12, sm: 6 }}
+          sx={{ flexDirection: "column" }}
+        >
           <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
             Comment
           </Typography>

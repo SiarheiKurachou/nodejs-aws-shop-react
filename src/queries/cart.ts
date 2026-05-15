@@ -8,11 +8,14 @@ export function useCart() {
   return useQuery({
     queryKey: ["cart"],
     queryFn: async () => {
-      const res = await axios.get<CartItem[]>(`${API_PATHS.cart}/profile/cart`, {
-        headers: {
-          Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
+      const res = await axios.get<CartItem[]>(
+        `${API_PATHS.cart}/profile/cart`,
+        {
+          headers: {
+            Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
+          },
         },
-      });
+      );
       return res.data;
     },
   });
@@ -27,7 +30,7 @@ export function useInvalidateCart() {
   const queryClient = useQueryClient();
   return React.useCallback(
     () => queryClient.invalidateQueries({ queryKey: ["cart"], exact: true }),
-    []
+    [],
   );
 }
 

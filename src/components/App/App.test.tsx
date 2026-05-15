@@ -42,12 +42,12 @@ test("Renders products list", async () => {
     }),
     http.get(`${API_PATHS.cart}/profile/cart`, () => {
       return HttpResponse.json([]);
-    })
+    }),
   );
   const { container, unmount } = renderWithProviders(
     <MemoryRouter initialEntries={["/"]}>
       <App />
-    </MemoryRouter>
+    </MemoryRouter>,
   );
 
   await waitFor(() => !container.textContent?.includes("Loading"));

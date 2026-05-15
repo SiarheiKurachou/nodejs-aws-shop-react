@@ -96,7 +96,11 @@ export default function PageProductForm() {
                     required
                   />
                 </Grid>
-                <Grid container size={{ xs: 12 }} sx={{ justifyContent: "space-between" }}>
+                <Grid
+                  container
+                  size={{ xs: 12 }}
+                  sx={{ justifyContent: "space-between" }}
+                >
                   <Button
                     color="primary"
                     onClick={() => navigate("/admin/products")}

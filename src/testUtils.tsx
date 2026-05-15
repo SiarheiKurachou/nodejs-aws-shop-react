@@ -25,9 +25,7 @@ function Providers({ children }: { children: React.ReactElement }) {
   );
 }
 
-export function renderWithProviders(
-  ui: React.ReactElement
-) {
+export function renderWithProviders(ui: React.ReactElement) {
   const container = document.createElement("div");
   document.body.appendChild(container);
   let root: Root | null = createRoot(container);

@@ -9,7 +9,7 @@ export function useAvailableProducts() {
     queryKey: ["available-products"],
     queryFn: async () => {
       const res = await axios.get<AvailableProduct[]>(
-        `${API_PATHS.bff}/product/available`
+        `${API_PATHS.bff}/product/available`,
       );
       return res.data;
     },
@@ -19,8 +19,12 @@ export function useAvailableProducts() {
 export function useInvalidateAvailableProducts() {
   const queryClient = useQueryClient();
   return React.useCallback(
-    () => queryClient.invalidateQueries({ queryKey: ["available-products"], exact: true }),
-    []
+    () =>
+      queryClient.invalidateQueries({
+        queryKey: ["available-products"],
+        exact: true,
+      }),
+    [],
   );
 }
 
@@ -29,7 +33,7 @@ export function useAvailableProduct(id?: string) {
     queryKey: ["product", { id }],
     queryFn: async () => {
       const res = await axios.get<AvailableProduct>(
-        `${API_PATHS.bff}/product/${id}`
+        `${API_PATHS.bff}/product/${id}`,
       );
       return res.data;
     },
@@ -42,7 +46,7 @@ export function useRemoveProductCache() {
   return React.useCallback(
     (id?: string) =>
       queryClient.removeQueries({ queryKey: ["product", { id }], exact: true }),
-    []
+    [],
   );
 }
 

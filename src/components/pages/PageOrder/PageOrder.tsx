@@ -44,7 +44,7 @@ export default function PageOrder() {
         queryKey: ["products"],
         queryFn: async (): Promise<AvailableProduct[]> => {
           const res = await axios.get<AvailableProduct[]>(
-            `${API_PATHS.bff}/product/available`
+            `${API_PATHS.bff}/product/available`,
           );
           return res.data;
         },
@@ -94,7 +94,7 @@ export default function PageOrder() {
           onSubmit={(values) =>
             updateOrderStatus(
               { id: order.id, ...values },
-              { onSuccess: () => invalidateOrder(order.id) }
+              { onSuccess: () => invalidateOrder(order.id) },
             )
           }
         >
@@ -131,7 +131,11 @@ export default function PageOrder() {
                     multiline
                   />
                 </Grid>
-                <Grid container size={{ xs: 12 }} sx={{ justifyContent: "space-between" }}>
+                <Grid
+                  container
+                  size={{ xs: 12 }}
+                  sx={{ justifyContent: "space-between" }}
+                >
                   <Button
                     type="submit"
                     variant="contained"
