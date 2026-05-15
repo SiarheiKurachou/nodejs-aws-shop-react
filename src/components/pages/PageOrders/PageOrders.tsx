@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 
 export default function PageOrders() {
   return (
-    <Box py={3}>
+    <Box sx={{ py: 3 }}>
       <Typography variant="h6" gutterBottom>
         Manage orders
       </Typography>

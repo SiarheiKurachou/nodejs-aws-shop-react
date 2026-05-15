@@ -21,7 +21,7 @@ import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import Box from "@mui/material/Box";
-import { useQueries } from "react-query";
+import { useQueries } from "@tanstack/react-query";
 import { useInvalidateOrder, useUpdateOrderStatus } from "~/queries/orders";
 
 type FormValues = {
@@ -31,24 +31,26 @@ type FormValues = {
 
 export default function PageOrder() {
   const { id } = useParams<{ id: string }>();
-  const results = useQueries([
-    {
-      queryKey: ["order", { id }],
-      queryFn: async () => {
-        const res = await axios.get<Order>(`${API_PATHS.order}/order/${id}`);
-        return res.data;
+  const results = useQueries({
+    queries: [
+      {
+        queryKey: ["order", { id }],
+        queryFn: async (): Promise<Order> => {
+          const res = await axios.get<Order>(`${API_PATHS.order}/order/${id}`);
+          return res.data;
+        },
       },
-    },
-    {
-      queryKey: "products",
-      queryFn: async () => {
-        const res = await axios.get<AvailableProduct[]>(
-          `${API_PATHS.bff}/product/available`
-        );
-        return res.data;
+      {
+        queryKey: ["products"],
+        queryFn: async (): Promise<AvailableProduct[]> => {
+          const res = await axios.get<AvailableProduct[]>(
+            `${API_PATHS.bff}/product/available`,
+          );
+          return res.data;
+        },
       },
-    },
-  ]);
+    ],
+  });
   const [
     { data: order, isLoading: isOrderLoading },
     { data: products, isLoading: isProductsLoading },
@@ -85,21 +87,21 @@ export default function PageOrder() {
         {lastStatusItem?.status.toUpperCase()}
       </Typography>
       <Typography variant="h6">Change status:</Typography>
-      <Box py={2}>
+      <Box sx={{ py: 2 }}>
         <Formik
           initialValues={{ status: lastStatusItem.status, comment: "" }}
           enableReinitialize
           onSubmit={(values) =>
             updateOrderStatus(
               { id: order.id, ...values },
-              { onSuccess: () => invalidateOrder(order.id) }
+              { onSuccess: () => invalidateOrder(order.id) },
             )
           }
         >
           {({ values, dirty, isSubmitting }: FormikProps<FormValues>) => (
             <Form autoComplete="off">
               <Grid container spacing={2}>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <Field
                     component={TextField}
                     name="status"
@@ -119,7 +121,7 @@ export default function PageOrder() {
                     ))}
                   </Field>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <Field
                     component={TextField}
                     name="comment"
@@ -129,7 +131,11 @@ export default function PageOrder() {
                     multiline
                   />
                 </Grid>
-                <Grid item container xs={12} justifyContent="space-between">
+                <Grid
+                  container
+                  size={{ xs: 12 }}
+                  sx={{ justifyContent: "space-between" }}
+                >
                   <Button
                     type="submit"
                     variant="contained"
@@ -156,7 +162,9 @@ export default function PageOrder() {
           </TableHead>
           <TableBody>
             {statusHistory.map((statusHistoryItem) => (
-              <TableRow key={order.id}>
+              <TableRow
+                key={`${order.id}-${statusHistoryItem.timestamp}-${statusHistoryItem.status}`}
+              >
                 <TableCell component="th" scope="row">
                   {statusHistoryItem.status.toUpperCase()}
                 </TableCell>

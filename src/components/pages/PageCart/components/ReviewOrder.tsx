@@ -17,7 +17,7 @@ export default function ReviewOrder({ address, items }: ReviewOrderProps) {
       </Typography>
       <CartItems items={items} isEditable={false} />
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
             Shipping
           </Typography>
@@ -26,7 +26,11 @@ export default function ReviewOrder({ address, items }: ReviewOrderProps) {
           </Typography>
           <Typography gutterBottom>{address.address}</Typography>
         </Grid>
-        <Grid item container direction="column" xs={12} sm={6}>
+        <Grid
+          container
+          size={{ xs: 12, sm: 6 }}
+          sx={{ flexDirection: "column" }}
+        >
           <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
             Comment
           </Typography>

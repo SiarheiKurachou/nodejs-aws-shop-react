@@ -1,7 +1,8 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
-import { render, RenderOptions } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { act } from "react";
+import { createRoot, Root } from "react-dom/client";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { theme } from "~/theme";
 
 function Providers({ children }: { children: React.ReactElement }) {
@@ -24,9 +25,23 @@ function Providers({ children }: { children: React.ReactElement }) {
   );
 }
 
-export function renderWithProviders(
-  ui: React.ReactElement,
-  options?: RenderOptions
-) {
-  return render(ui, { wrapper: Providers, ...options });
+export function renderWithProviders(ui: React.ReactElement) {
+  const container = document.createElement("div");
+  document.body.appendChild(container);
+  let root: Root | null = createRoot(container);
+
+  act(() => {
+    root?.render(<Providers>{ui}</Providers>);
+  });
+
+  return {
+    container,
+    unmount: () => {
+      act(() => {
+        root?.unmount();
+      });
+      root = null;
+      container.remove();
+    },
+  };
 }

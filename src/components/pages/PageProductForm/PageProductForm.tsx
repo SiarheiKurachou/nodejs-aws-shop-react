@@ -41,7 +41,7 @@ export default function PageProductForm() {
 
   return (
     <PaperLayout>
-      <Typography component="h1" variant="h4" align="center" mb={2}>
+      <Typography component="h1" variant="h4" align="center" sx={{ mb: 2 }}>
         {id ? "Edit product" : "Create new product"}
       </Typography>
       {isLoading ? (
@@ -55,7 +55,7 @@ export default function PageProductForm() {
           {({ dirty, isSubmitting }: FormikProps<AvailableProduct>) => (
             <Form autoComplete="off">
               <Grid container spacing={2}>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <Field
                     component={TextField}
                     name="title"
@@ -65,7 +65,7 @@ export default function PageProductForm() {
                     required
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <Field
                     component={TextField}
                     name="description"
@@ -76,7 +76,7 @@ export default function PageProductForm() {
                     required
                   />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid size={{ xs: 12, sm: 4 }}>
                   <Field
                     component={TextField}
                     name="price"
@@ -86,7 +86,7 @@ export default function PageProductForm() {
                     required
                   />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid size={{ xs: 12, sm: 4 }}>
                   <Field
                     component={TextField}
                     name="count"
@@ -96,7 +96,11 @@ export default function PageProductForm() {
                     required
                   />
                 </Grid>
-                <Grid item container xs={12} justifyContent="space-between">
+                <Grid
+                  container
+                  size={{ xs: 12 }}
+                  sx={{ justifyContent: "space-between" }}
+                >
                   <Button
                     color="primary"
                     onClick={() => navigate("/admin/products")}

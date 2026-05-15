@@ -7,8 +7,8 @@ import { Link } from "react-router-dom";
 
 export default function PageProductImport() {
   return (
-    <Box py={3}>
-      <Box mb={2} display="flex" justifyContent="space-between">
+    <Box sx={{ py: 3 }}>
+      <Box sx={{ mb: 2, display: "flex", justifyContent: "space-between" }}>
         <CSVFileImport
           url={`${API_PATHS.import}/import`}
           title="Import Products CSV"
