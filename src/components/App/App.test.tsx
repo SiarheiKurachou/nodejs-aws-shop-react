@@ -2,13 +2,21 @@ import { MemoryRouter } from "react-router-dom";
 import { test, expect } from "vitest";
 import App from "~/components/App/App";
 import { server } from "~/mocks/server";
-import { rest } from "msw";
+import { delay, http, HttpResponse } from "msw";
 import API_PATHS from "~/constants/apiPaths";
-import { CartItem } from "~/models/CartItem";
 import { AvailableProduct } from "~/models/Product";
 import { renderWithProviders } from "~/testUtils";
-import { screen, waitForElementToBeRemoved } from "@testing-library/react";
 import { formatAsPrice } from "~/utils/utils";
+
+async function waitFor(condition: () => boolean, timeoutMs = 3000) {
+  const startedAt = Date.now();
+  while (!condition()) {
+    if (Date.now() - startedAt > timeoutMs) {
+      throw new Error("Timed out waiting for condition");
+    }
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+}
 
 test("Renders products list", async () => {
   const products: AvailableProduct[] = [
@@ -28,26 +36,24 @@ test("Renders products list", async () => {
     },
   ];
   server.use(
-    rest.get(`${API_PATHS.bff}/product/available`, (req, res, ctx) => {
-      return res(
-        ctx.status(200),
-        ctx.delay(),
-        ctx.json<AvailableProduct[]>(products)
-      );
+    http.get(`${API_PATHS.bff}/product/available`, async () => {
+      await delay();
+      return HttpResponse.json(products);
     }),
-    rest.get(`${API_PATHS.cart}/profile/cart`, (req, res, ctx) => {
-      return res(ctx.status(200), ctx.json<CartItem[]>([]));
+    http.get(`${API_PATHS.cart}/profile/cart`, () => {
+      return HttpResponse.json([]);
     })
   );
-  renderWithProviders(
+  const { container, unmount } = renderWithProviders(
     <MemoryRouter initialEntries={["/"]}>
       <App />
     </MemoryRouter>
   );
 
-  await waitForElementToBeRemoved(() => screen.queryByText(/Loading/));
+  await waitFor(() => !container.textContent?.includes("Loading"));
   products.forEach((product) => {
-    expect(screen.getByText(product.title)).toBeInTheDocument();
-    expect(screen.getByText(formatAsPrice(product.price))).toBeInTheDocument();
+    expect(container.textContent).toContain(product.title);
+    expect(container.textContent).toContain(formatAsPrice(product.price));
   });
+  unmount();
 });

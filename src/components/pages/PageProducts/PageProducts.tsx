@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 
 export default function PageProducts() {
   return (
-    <Box py={3}>
+    <Box sx={{ py: 3 }}>
       <Products />
     </Box>
   );
