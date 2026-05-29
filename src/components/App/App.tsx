@@ -43,6 +43,7 @@ function AppRoutes() {
     <Suspense fallback={<Typography>Loading...</Typography>}>
       <Routes>
         <Route path="/login" element={<PageLogin />} />
+        <Route path="/login/callback" element={<Navigate to="/" replace />} />
         <Route
           path="/"
           element={<ProtectedRoute element={<MainLayout><PageProducts /></MainLayout>} />}
