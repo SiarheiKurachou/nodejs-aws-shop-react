@@ -7,13 +7,16 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import Cart from "~/components/MainLayout/components/Cart";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import Link from "@mui/material/Link";
+import { useAuth } from "~/contexts/AuthContext";
+import Divider from "@mui/material/Divider";
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const auth = true;
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -21,6 +24,12 @@ export default function Header() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    handleClose();
+    logout();
+    navigate("/login");
   };
 
   return (
@@ -37,7 +46,7 @@ export default function Header() {
           </Link>
         </Typography>
 
-        {auth && (
+        {isAuthenticated && (
           <div>
             <IconButton
               aria-label="account of current user"
@@ -77,6 +86,10 @@ export default function Header() {
                 onClick={handleClose}
               >
                 Manage products
+              </MenuItem>
+              <Divider />
+              <MenuItem onClick={handleLogout}>
+                Logout
               </MenuItem>
             </Menu>
           </div>
