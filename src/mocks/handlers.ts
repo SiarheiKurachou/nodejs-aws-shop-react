@@ -3,21 +3,21 @@ import API_PATHS from "~/constants/apiPaths";
 import { availableProducts, orders, products, cart } from "~/mocks/data";
 
 export const handlers = [
-  http.get(`${API_PATHS.bff}/product`, async () => {
+  http.get(`${API_PATHS.bff}/products`, async () => {
     await delay();
     return HttpResponse.json(products);
   }),
-  http.put(`${API_PATHS.bff}/product`, () => {
+  http.post(`${API_PATHS.bff}/products`, () => {
     return new HttpResponse(null, { status: 200 });
   }),
-  http.delete(`${API_PATHS.bff}/product/:id`, () => {
+  http.delete(`${API_PATHS.bff}/products/:id`, () => {
     return new HttpResponse(null, { status: 200 });
   }),
-  http.get(`${API_PATHS.bff}/product/available`, async () => {
+  http.get(`${API_PATHS.bff}/products/available`, async () => {
     await delay();
     return HttpResponse.json(availableProducts);
   }),
-  http.get(`${API_PATHS.bff}/product/:id`, async ({ params }) => {
+  http.get(`${API_PATHS.bff}/products/:id`, async ({ params }) => {
     const product = availableProducts.find((p) => p.id === params.id);
     if (!product) {
       return new HttpResponse(null, { status: 404 });
