@@ -2,7 +2,8 @@ import React, { Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "~/components/MainLayout/MainLayout";
 import { Typography } from "@mui/material";
-import { AuthProvider, useAuth } from "~/contexts/AuthContext";
+import { useAuth } from "react-oidc-context";
+import { AuthProvider } from "~/contexts/AuthContext";
 
 const PageProductForm = React.lazy(
   () => import("~/components/pages/PageProductForm/PageProductForm"),
@@ -28,13 +29,13 @@ const PageLogin = React.lazy(
 
 // Protected route wrapper
 const ProtectedRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
-  const { isAuthenticated, loading } = useAuth();
+  const auth = useAuth();
 
-  if (loading) {
+  if (auth.isLoading) {
     return <Typography>Loading...</Typography>;
   }
 
-  return isAuthenticated ? element : <Navigate to="/login" replace />;
+  return auth.isAuthenticated ? element : <Navigate to="/login" replace />;
 };
 
 function AppRoutes() {

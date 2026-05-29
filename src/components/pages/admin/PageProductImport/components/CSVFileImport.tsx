@@ -2,6 +2,7 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import axios from "axios";
+import { useAuth } from "react-oidc-context";
 
 type CSVFileImportProps = {
   url: string;
@@ -9,6 +10,7 @@ type CSVFileImportProps = {
 };
 
 export default function CSVFileImport({ url, title }: CSVFileImportProps) {
+  const auth = useAuth();
   const [file, setFile] = React.useState<File>();
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,12 +26,9 @@ export default function CSVFileImport({ url, title }: CSVFileImportProps) {
   };
 
   const uploadFile = async () => {
-    if (!file) return;
+    if (!file || !auth.user?.id_token) return;
     
     console.log("uploadFile to", url);
-
-    // Get authorization token from localStorage
-    const authorization_token = localStorage.getItem('authorization_token');
 
     // Get the presigned URL
     const response = await axios({
@@ -39,7 +38,7 @@ export default function CSVFileImport({ url, title }: CSVFileImportProps) {
         name: encodeURIComponent(file.name),
       },
       headers: {
-        Authorization: `Basic ${authorization_token}`,
+        Authorization: `Bearer ${auth.user.id_token}`,
       },
     });
     console.log("File to upload: ", file.name);

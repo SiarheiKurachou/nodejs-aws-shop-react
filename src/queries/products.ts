@@ -3,14 +3,17 @@ import API_PATHS from "~/constants/apiPaths";
 import { AvailableProduct } from "~/models/Product";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import React from "react";
-import { getIdToken } from "~/utils/cognito";
+import { useAuth } from "react-oidc-context";
 
 export function useAvailableProducts() {
+  const auth = useAuth();
+
   return useQuery({
     queryKey: ["available-products"],
     queryFn: async () => {
-      const idToken = getIdToken();
-      const headers = idToken ? { Authorization: `Bearer ${idToken}` } : {};
+      const headers = auth.user?.id_token
+        ? { Authorization: `Bearer ${auth.user.id_token}` }
+        : {};
 
       const res = await axios.get<AvailableProduct[]>(
         `${API_PATHS.bff}/products`,

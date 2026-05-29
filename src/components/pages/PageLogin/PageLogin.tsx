@@ -1,47 +1,19 @@
 import React, { useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Box, Button, Card, CardContent, CircularProgress, Typography } from "@mui/material";
-import { useAuth } from "~/contexts/AuthContext";
-import { getCognitoLoginUrl, exchangeCodeForTokens, storeTokens } from "~/utils/cognito";
+import { useAuth } from "react-oidc-context";
 
 export default function PageLogin() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const { login, isAuthenticated, loading } = useAuth();
-  const [error, setError] = React.useState<string | null>(null);
-  const [isProcessing, setIsProcessing] = React.useState(false);
+  const auth = useAuth();
 
   useEffect(() => {
-    if (isAuthenticated && !loading) {
+    if (auth.isAuthenticated) {
       navigate("/");
     }
-  }, [isAuthenticated, loading, navigate]);
+  }, [auth.isAuthenticated, navigate]);
 
-  useEffect(() => {
-    const code = searchParams.get("code");
-    if (code) {
-      handleCallback(code);
-    }
-  }, [searchParams]);
-
-  const handleCallback = async (code: string) => {
-    setIsProcessing(true);
-    try {
-      const tokens = await exchangeCodeForTokens(code);
-      storeTokens(tokens);
-      login(tokens);
-      navigate("/");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to authenticate");
-      setIsProcessing(false);
-    }
-  };
-
-  const handleLogin = () => {
-    window.location.href = getCognitoLoginUrl();
-  };
-
-  if (loading || isProcessing) {
+  if (auth.isLoading) {
     return (
       <Box
         sx={{
@@ -75,7 +47,7 @@ export default function PageLogin() {
             Sign in with AWS Cognito to continue
           </Typography>
 
-          {error && (
+          {auth.error && (
             <Box
               sx={{
                 mb: 2,
@@ -85,7 +57,7 @@ export default function PageLogin() {
                 borderRadius: 1,
               }}
             >
-              <Typography variant="body2">{error}</Typography>
+              <Typography variant="body2">{auth.error.message}</Typography>
             </Box>
           )}
 
@@ -93,7 +65,7 @@ export default function PageLogin() {
             variant="contained"
             color="primary"
             fullWidth
-            onClick={handleLogin}
+            onClick={() => auth.signinRedirect()}
             sx={{ py: 1.5 }}
           >
             Sign In with Cognito

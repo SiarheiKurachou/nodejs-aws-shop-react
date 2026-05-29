@@ -9,13 +9,13 @@ import Menu from "@mui/material/Menu";
 import Cart from "~/components/MainLayout/components/Cart";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import Link from "@mui/material/Link";
-import { useAuth } from "~/contexts/AuthContext";
+import { useAuth } from "react-oidc-context";
 import Divider from "@mui/material/Divider";
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const { isAuthenticated, logout } = useAuth();
+  const auth = useAuth();
   const navigate = useNavigate();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -28,7 +28,7 @@ export default function Header() {
 
   const handleLogout = () => {
     handleClose();
-    logout();
+    auth.removeUser();
     navigate("/login");
   };
 
@@ -46,7 +46,7 @@ export default function Header() {
           </Link>
         </Typography>
 
-        {isAuthenticated && (
+        {auth.isAuthenticated && (
           <div>
             <IconButton
               aria-label="account of current user"
