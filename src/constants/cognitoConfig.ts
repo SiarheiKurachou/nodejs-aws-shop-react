@@ -1,7 +1,17 @@
+const requireEnv = (name: keyof ImportMetaEnv): string => {
+  const value = import.meta.env[name];
+
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+
+  return value;
+};
+
 export const cognitoConfig = {
-  authority: "https://cognito-idp.eu-north-1.amazonaws.com/eu-north-1_y4FtUaQJO",
-  client_id: "4tt9mj80v9rp9oivhjkrk6g7dh",
-  redirect_uri: `${window.location.origin}/login/callback`,
+  authority: requireEnv("VITE_COGNITO_AUTHORITY"),
+  client_id: requireEnv("VITE_COGNITO_CLIENT_ID"),
+  redirect_uri: requireEnv("VITE_COGNITO_REDIRECT_URI"),
   response_type: "code",
-  scope: "openid profile email",
+  scope: requireEnv("VITE_COGNITO_SCOPE"),
 };

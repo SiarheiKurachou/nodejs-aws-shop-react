@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import API_PATHS from "~/constants/apiPaths";
 import { AvailableProduct } from "~/models/Product";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
@@ -59,23 +59,33 @@ export function useRemoveProductCache() {
 }
 
 export function useUpsertAvailableProduct() {
+  const auth = useAuth();
+
   return useMutation({
-    mutationFn: (values: AvailableProduct) =>
-      axios.post<AvailableProduct>(`${API_PATHS.bff}/products`, values, {
-        headers: {
-          Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
-        },
-      }),
+    mutationFn: (values: AvailableProduct) => {
+      const headers = auth.user?.id_token
+        ? { Authorization: `Bearer ${auth.user.id_token}` }
+        : {};
+
+      return axios.post<AvailableProduct>(`${API_PATHS.bff}/products`, values, {
+        headers,
+      });
+    },
   });
 }
 
 export function useDeleteAvailableProduct() {
+  const auth = useAuth();
+
   return useMutation({
-    mutationFn: (id: string) =>
-      axios.delete(`${API_PATHS.bff}/products/${id}`, {
-        headers: {
-          Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
-        },
-      }),
+    mutationFn: (id: string) => {
+      const headers = auth.user?.id_token
+        ? { Authorization: `Bearer ${auth.user.id_token}` }
+        : {};
+
+      return axios.delete(`${API_PATHS.bff}/products/${id}`, {
+        headers,
+      });
+    },
   });
 }
