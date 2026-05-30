@@ -16,17 +16,17 @@ const queryClient = new QueryClient({
 });
 
 // Add axios interceptor for 401 and 403 responses
-axios.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      alert("Unauthorized: Please check your authorization token.");
-    } else if (error.response?.status === 403) {
-      alert("Forbidden: You do not have permission to access this resource.");
-    }
-    return Promise.reject(error);
-  }
-);
+// axios.interceptors.response.use(
+//   (response) => response,
+//   (error) => {
+//     if (error.response?.status === 401) {
+//       alert("Unauthorized: Please check your authorization token.");
+//     } else if (error.response?.status === 403) {
+//       alert("Forbidden: You do not have permission to access this resource.");
+//     }
+//     return Promise.reject(error);
+//   }
+// );
 
 if (import.meta.env.DEV) {
   const { worker } = await import("./mocks/browser");
