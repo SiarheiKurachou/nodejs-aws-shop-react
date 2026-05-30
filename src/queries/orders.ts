@@ -1,15 +1,22 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import React from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import API_PATHS from "~/constants/apiPaths";
 import { OrderStatus } from "~/constants/order";
 import { Order } from "~/models/Order";
+import { useAuth } from "react-oidc-context";
 
 export function useOrders() {
+  const auth = useAuth();
+
   return useQuery({
     queryKey: ["orders"],
     queryFn: async () => {
-      const res = await axios.get<Order[]>(`${API_PATHS.order}/order`);
+      const headers = auth.user?.id_token
+        ? { Authorization: `Bearer ${auth.user.id_token}` }
+        : {};
+
+      const res = await axios.get<Order[]>(`${API_PATHS.order}/order`, { headers });
       return res.data;
     },
   });
@@ -24,6 +31,8 @@ export function useInvalidateOrders() {
 }
 
 export function useUpdateOrderStatus() {
+  const auth = useAuth();
+
   return useMutation({
     mutationFn: (values: {
       id: string;
@@ -31,22 +40,28 @@ export function useUpdateOrderStatus() {
       comment: string;
     }) => {
       const { id, ...data } = values;
+      const headers = auth.user?.id_token
+        ? { Authorization: `Bearer ${auth.user.id_token}` }
+        : {};
+
       return axios.put(`${API_PATHS.order}/order/${id}/status`, data, {
-        headers: {
-          Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
-        },
+        headers,
       });
     },
   });
 }
 
 export function useSubmitOrder() {
+  const auth = useAuth();
+
   return useMutation({
     mutationFn: (values: Omit<Order, "id">) => {
+      const headers = auth.user?.id_token
+        ? { Authorization: `Bearer ${auth.user.id_token}` }
+        : {};
+
       return axios.put<Omit<Order, "id">>(`${API_PATHS.order}/order`, values, {
-        headers: {
-          Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
-        },
+        headers,
       });
     },
   });
@@ -65,12 +80,17 @@ export function useInvalidateOrder() {
 }
 
 export function useDeleteOrder() {
+  const auth = useAuth();
+
   return useMutation({
-    mutationFn: (id: string) =>
-      axios.delete(`${API_PATHS.order}/order/${id}`, {
-        headers: {
-          Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
-        },
-      }),
+    mutationFn: (id: string) => {
+      const headers = auth.user?.id_token
+        ? { Authorization: `Bearer ${auth.user.id_token}` }
+        : {};
+
+      return axios.delete(`${API_PATHS.order}/order/${id}`, {
+        headers,
+      });
+    },
   });
 }

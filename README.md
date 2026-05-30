@@ -15,6 +15,17 @@ This is frontend starter project for nodejs-aws mentoring program. It uses the f
 - [Prettier](https://prettier.io/) as a code formatting tool
 - [TypeScript](https://www.typescriptlang.org/) as a type checking tool
 
+## Environment Variables
+
+Create a `.env` file in the project root and define:
+
+- `VITE_COGNITO_AUTHORITY`
+- `VITE_COGNITO_CLIENT_ID`
+- `VITE_COGNITO_REDIRECT_URI`
+- `VITE_COGNITO_SCOPE`
+
+You can start from `.env.example`.
+
 ## Available Scripts
 
 ### `start`
